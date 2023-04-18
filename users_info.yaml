@@ -1,0 +1,20 @@
+
+cookie:
+  expiry_days: 30
+  key: some_signature_key
+  name: some_cookie_name
+credentials:
+  usernames:
+    victormarp:
+      email: victor1rp@hotmail.com
+      name: Victor Rios Pinto
+      password: Venezuela12@
+    test:
+      email: victor.riospinto@student.hu.nl
+      name: Test Dummy
+      password: 12345
+preauthorized:
+  emails:
+  - victor1rp@hotmail.com
+  
+ hashed_passwords = stauth.Hasher(['Venezuela12@', '12345']).generate()
