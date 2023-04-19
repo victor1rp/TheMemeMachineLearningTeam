@@ -20,7 +20,7 @@ img = cv2.imdecode(np.asarray(img_array), cv2.IMREAD_UNCHANGED)
 img_blurred = cv2.GaussianBlur(img, (21, 21), 0)
 
 # Add a "Sensitive Content" filter
-cv2.putText(img_blurred, "Sensitive Content", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+cv2.putText(img_blurred, "Beware Nude Content ", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
 # Display the blurred image with the filter
 cv2.imshow("Sensitive Content Filtered Image", img_blurred)
