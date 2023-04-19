@@ -13,16 +13,30 @@ import json
 import streamlit as st
 import matplotlib.pyplot as plt
 
-# Define API credentials and parameters
-API_USER = '928209'
-API_SECRET = 'fbJieoTnWSSCqmKbgbmU'
-API_PARAMS = {'models': 'nudity-2.0', 'api_user': API_USER, 'api_secret': API_SECRET}
-
-# Function to check nudity in an image using the Sightengine API
 def check_nudity(image_file):
-    files = {'media': image_file}
-    r = requests.post('https://api.sightengine.com/1.0/check.json', files=files, data=API_PARAMS)
-    return json.loads(r.text)
+    # Call SightEngine API to detect nudity
+    files = {'media': image_file.getvalue()}
+    params = {
+        'models': 'nudity-2.0',
+        'api_user': '928209',
+        'api_secret': 'fbJieoTnWSSCqmKbgbmU'
+    }
+    response = requests.post('https://api.sightengine.com/1.0/check.json', files=files, data=params)
+
+    # Process API response
+    output = json.loads(response.text)
+    nude_scores = output['nudity']
+
+    # Extract nudity scores and change the type of values
+    nude_classes = ["sexual_activity", "sexual_display", "erotica", "suggestive", "none"]
+    values = [nude_scores[nude_class] for nude_class in nude_classes]
+    # Get index of the class with the highest percentage
+    highest_percentage = max(values)
+    convert_to_percentage = highest_percentage*100
+    highest_index_value = values.index(highest_percentage)
+    highest_nude_class = nude_classes[highest_index_value]
+    
+    return (nude_scores, nude_classes, values, highest_percentage, highest_nude_class)
 
 # Home page section
 def home():
@@ -106,45 +120,15 @@ def upload():
         # Display uploaded image
         st.image(image_file, caption='Uploaded Image', use_column_width=True)
 
-        # Call SightEngine API to detect nudity
-        files = {'media': image_file.getvalue()}
-        params = {
-            'models': 'nudity-2.0',
-            'api_user': '928209',
-            'api_secret': 'fbJieoTnWSSCqmKbgbmU'
-        }
-        response = requests.post('https://api.sightengine.com/1.0/check.json', files=files, data=params)
+        # Call check_nudity function to detect nudity
+        nude_scores, nude_classes, values, highest_percentage, highest_nude_class = check_nudity(image_file)
 
-        # Process API response
-        output = json.loads(response.text)
-        nude_scores = output['nudity']
-
-        # Display moderation results and extract each class and percentage in the nudity score variable
+        # Display moderation results
         st.subheader('Moderation Results')
-
-        # Extract nudity scores and change the type of values
-        nude_classes = ["sexual_activity", "sexual_display", "erotica", "suggestive", "none"]
-        values = [nude_scores[nude_class] for nude_class in nude_classes]
-        
-        # Make list of the nudity classes and their percentage to use them
-        list_nude_classes = list(nude_scores.keys())
-        list_values = list(nude_scores.values())
-        
-        # Get index of the class with the highest percentage
-        highest_percentage = max(values)
-        convert_to_percentage = highest_percentage*100
-        highest_index_value = list_values.index(highest_percentage)
-        highest_nude_class = list_nude_classes[highest_index_value]
-
         st.write(f'{nude_scores}')
         st.write(f'{values}')
-        st.write(f'{values}')
-
-        
         st.write(f'{highest_percentage}')
-
-
-        st.write(f'According to the AI detector, the uploaded image contains {convert_to_percentage}% {highest_nude_class}')
+        st.write(f'According to the AI detector, the uploaded image contains {highest_percentage:.2f}% {highest_nude_class}')
 
         # Define colors for each class
         colors = ['grey', 'red', 'orange', 'yellow', 'green']
