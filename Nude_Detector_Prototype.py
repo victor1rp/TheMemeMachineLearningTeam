@@ -32,11 +32,10 @@ def check_nudity(image_file):
     values = [nude_scores[nude_class] for nude_class in nude_classes]
     # Get index of the class with the highest percentage
     highest_percentage = max(values)
-    convert_to_percentage = highest_percentage*100
     highest_index_value = values.index(highest_percentage)
     highest_nude_class = nude_classes[highest_index_value]
     
-    return (nude_scores, nude_classes, values, highest_percentage, highest_nude_class)
+    return (highest_percentage, nude_classes, values, highest_nude_class)
 
 # Home page section
 def home():
@@ -121,24 +120,25 @@ def upload():
         st.image(image_file, caption='Uploaded Image', use_column_width=True)
 
         # Call check_nudity function to detect nudity
-        nude_scores, nude_classes, values, highest_percentage, highest_nude_class = check_nudity(image_file)
+        highest_percentage, nude_classes, values, highest_nude_class = check_nudity(image_file)
 
         # Display moderation results
         st.subheader('Moderation Results')
-        st.write(f'{nude_scores}')
-        st.write(f'{values}')
-        st.write(f'{highest_percentage}')
         st.write(f'According to the AI detector, the uploaded image contains {highest_percentage:.2f}% {highest_nude_class}')
 
         # Define colors for each class
-        colors = ['grey', 'red', 'orange', 'yellow', 'green']
-        
-        # Plot the pie chart
+        colors = ['purple', 'pink', 'red', 'yellow', 'green']
+
+        # Plot the bar chart
         fig, ax = plt.subplots(figsize=(8, 8))
-        ax.pie(values, labels=nude_classes, colors=colors, shadow=True,explode=(0.1, 0.1, 0.1, 0.1, 0.1), autopct='%1.2f%%')
+        bars = ax.bar(nude_classes, values, color=colors)
+        ax.bar_label(bars)
         plt.title('Nudity Scores')
+        plt.xlabel('Nudity Classes')
+        plt.ylabel('Scores')
         plt.show()
-        plot = st.pyplot(fig)
+        st.pyplot(fig)
+
 
         st.subheader('Understanding the scoring')
         st.markdown("""The scores are returned in a way that puts the emphasis on the most explicit class corresponding to the image. As an example, the class sexual_display shouldn't be understood as "is there sexual display in the image?" but rather "is there sexual display AND no sexual activity in the image?". As an illustration, an image of a woman in lingerie will score highly on the suggestive class. But if that woman is engaged in a sexual act, the AI Tool will focus on the most explicit class (sexual_activity) and return a very low score for the less explicit one (suggestive and suggestive.lingerie), because the image as a whole is explicit and should not be labelled as simply "suggestive" or "lingerie".""")
