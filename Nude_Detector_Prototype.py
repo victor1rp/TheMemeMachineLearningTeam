@@ -12,6 +12,8 @@ import requests
 import json
 import streamlit as st
 import matplotlib.pyplot as plt
+import cv2
+import numpy as np
 
 def check_nudity(image_file):
     # Call SightEngine API to detect nudity
@@ -29,9 +31,12 @@ def check_nudity(image_file):
 
     # Extract nudity scores and change the type of values
     nude_classes = ["sexual_activity", "sexual_display", "erotica", "suggestive", "none"]
-    values = [nude_scores[nude_class] for nude_class in nude_classes]
+
+    # Make it actually a percentage value
+    values = [nude_scores[nude_class] * 100 for nude_class in nude_classes]
+
     # Get index of the class with the highest percentage
-    highest_percentage = max(values)
+    highest_percentage = max(values) 
     highest_index_value = values.index(highest_percentage)
     highest_nude_class = nude_classes[highest_index_value]
     
@@ -50,12 +55,10 @@ def user():
     st.title('User Page')
 
 
-
-# Uploading image section
-def upload():
-    # Add code for uploading image page
-    st.title('Upload Image Page')
-
+# About section
+def about():
+    # Add code for user page
+    st.title('About Page')
     st.header('Nudity Classes and sub-classes')
     st.write('There are 5 main Nudity Classes, each subdivided into further sub-classes. The classes are presented here in descending order of expliciteness, from the most explicit (sexual activity) down to the safest.')
     st.subheader('Sexual activity') 
@@ -108,36 +111,67 @@ def upload():
     - Unclothed dolls with no sexual organs, such as Barbie dolls
     """)
 
+# Uploading image section
+def upload():
+    # Add code for uploading image page
+    st.title('Upload Image Page')
 
-    st.title('Prototype Nudity AI Detector')
+    st.header('Prototype Nudity AI Detector')
 
     # Upload image file
     image_file = st.file_uploader('Upload an image', type=['jpg', 'jpeg', 'png'])
 
     # Process uploaded image
     if image_file is not None:
-        # Display uploaded image
-        st.image(image_file, caption='Uploaded Image', use_column_width=True)
+
+        # Convert uploaded image file to numpy array
+        image = cv2.imdecode(np.frombuffer(image_file.read(), np.uint8), cv2.IMREAD_COLOR)
 
         # Call check_nudity function to detect nudity
         highest_percentage, nude_classes, values, highest_nude_class = check_nudity(image_file)
+
+        if (highest_nude_class == 'none' or highest_nude_class == 'suggestive') and highest_percentage > 10:
+            st.image(image, caption='Uploaded Image', channels='BGR')      
+        else:
+            # Blur the image
+            img_blurred = cv2.GaussianBlur(image, (51, 51), 0)
+
+            # Add a "Sensitive Content" filter with a white box behind the text
+            text = "Beware Nude Content"
+            text_size, _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
+            text_x = (image.shape[1] - text_size[0]) // 2
+            text_y = (image.shape[0] + text_size[1]) // 2
+            cv2.rectangle(img_blurred, (text_x-10, text_y-35), (text_x+text_size[0]+10, text_y+10), (255,255,255), -1)
+            cv2.putText(img_blurred, text, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+            # Create a checkbox to toggle the image blur
+            blur_checkbox = st.checkbox("Unblur Image", value=True)
+            if blur_checkbox:
+                st.image(img_blurred, caption='Blurred Image', channels='BGR')
+            else:
+                st.image(image, caption='Unblurred Image', channels='BGR')
+
+        
 
         # Display moderation results
         st.subheader('Moderation Results')
         st.write(f'According to the AI detector, the uploaded image contains {highest_percentage:.2f}% {highest_nude_class}')
 
+
         # Define colors for each class
         colors = ['purple', 'pink', 'red', 'yellow', 'green']
 
-        # Plot the bar chart
+        # Style and plot the bar chart
+        plt.style.use('dark_background')
         fig, ax = plt.subplots(figsize=(8, 8))
-        bars = ax.bar(nude_classes, values, color=colors)
+        bars = ax.bar(nude_classes, values, label=nude_classes , color=colors)
         ax.bar_label(bars)
-        plt.title('Nudity Scores')
+        plt.title('Nudity Percentage')
         plt.xlabel('Nudity Classes')
         plt.ylabel('Scores')
         plt.show()
         st.pyplot(fig)
+
 
 
         st.subheader('Understanding the scoring')
@@ -147,7 +181,8 @@ def upload():
 pages = {
     'Home': home,
     'User': user,
-    'Upload Image': upload
+    'Upload Image': upload,
+    'About': about
 }
 
 # Define app title and favicon
