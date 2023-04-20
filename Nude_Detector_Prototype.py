@@ -42,13 +42,25 @@ def check_nudity(image_file):
     
     return (highest_percentage, nude_classes, values, highest_nude_class)
 
+
 # Home page section
+# Home page section
+image1 = 'C:/Users/Bas/OneDrive - Stichting Hogeschool Utrecht/Bureaublad/Minor github/TheMemeMachineLearningTeam/Nudepictures/1.jpg'
+image2 = 'C:/Users/Bas/OneDrive - Stichting Hogeschool Utrecht/Bureaublad/Minor github/TheMemeMachineLearningTeam/Nudepictures/2.png'
+image3 = 'C:/Users/Bas/OneDrive - Stichting Hogeschool Utrecht/Bureaublad/Minor github/TheMemeMachineLearningTeam/Nudepictures/3.jpg'
+image4 = 'C:/Users/Bas/OneDrive - Stichting Hogeschool Utrecht/Bureaublad/Minor github/TheMemeMachineLearningTeam/Nudepictures/4.png'
+
+
 def home():
     # Add code for home page
     st.title('Home Page')
     st.header('Prototype Nudity AI Detector')
     st.write('This app uses an AI model to detect nudity in images. Please select a page from the sidebar to get started.')
-
+    
+    st.image(image1, use_column_width=True)
+    st.image(image2, use_column_width=True)
+    st.image(image3, use_column_width=True)
+    st.image(image4, use_column_width=True)
 # User section
 def user():
     # Add code for user page
