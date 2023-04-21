@@ -50,7 +50,7 @@ def home():
     # Add code for home page
     st.title('Home Page')
     st.header('Prototype Nudity AI Detector')
-    st.write('This app uses an AI model to detect nudity in images. Please select a page from the sidebar to get started.')
+    st.write('This app uses an AI model to detect nudity in images. To try this out yourself select Upload Image from the sidebar to get started!')
     
     col1, col2, col3, col4 = st.columns(4)
     with col1:
