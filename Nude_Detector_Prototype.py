@@ -198,7 +198,7 @@ def upload():
 def design():
     st.title('Design')
     st.header('Design proces for our nudity detector')
-    st.write("If you are interessted in the proces of making this Nudity Detector you can visit our Prezi presentation at: https://prezi.com/view/dQGMFpSzz8wxg2VJXKm6/")
+    st.write("If you are interested in the proces of making this Nudity Detector you can visit our Prezi presentation for more information at: https://prezi.com/view/dQGMFpSzz8wxg2VJXKm6/")
     st.image('https://i.postimg.cc/wvJVZwLQ/Knipsel.png', width=1000)
 
 # Create a dictionary to store the pages
