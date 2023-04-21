@@ -29,7 +29,7 @@ def check_nudity(image_file):
     output = json.loads(response.text)
     nude_scores = output['nudity']
 
-    # Extract nudity scores and change the type of values
+    # Extract nudity scores 
     nude_classes = ["sexual_activity", "sexual_display", "erotica", "suggestive", "none"]
 
     # Make it actually a percentage value
@@ -42,30 +42,18 @@ def check_nudity(image_file):
     
     return (highest_percentage, nude_classes, values, highest_nude_class)
 
-
 # Home page section
-# Home page section
-
 def home():
     # Add code for home page
     st.title('Home Page')
     st.header('Prototype Nudity AI Detector')
-    st.write('This app uses an AI model to detect nudity in images. To try this out yourself select Upload Image from the sidebar to get started!')
-    
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.image('https://static.independent.co.uk/s3fs-public/thumbnails/image/2012/02/24/00/25Febmodelprotest.jpg', width=400)
-    
-    with col2:
-        st.image('https://hips.hearstapps.com/hmg-prod/images/controversial-celebrity-instagram-pics-kendall-jenner-1583441928.jpg?crop=1xw:1xh;center,top&resize=980:*', width=200)
-    
-    with col3:
-        st.image('https://media.istockphoto.com/id/178603721/nl/foto/happy-young-couple-enjoying-summer-on-beach.jpg?s=2048x2048&w=is&k=20&c=lffSztDT4O9b_vAmpsgCr1Ij6fR6cr5tcIhtbI2SqAE=', width=300)
-    
-    with col4:
-        st.image('https://media.istockphoto.com/id/1371786982/nl/foto/four-of-us-at-the-beach.jpg?s=2048x2048&w=is&k=20&c=otgJKBP7QHpsQ14Ctmdt0AqtnAfaE_A64zgzKJEpzxU=', width=300)
+    st.write('This app uses an AI model to detect nudity in images. Please select a page from the sidebar to get started.')
 
-    
+# User section
+def user():
+    # Add code for user page
+    st.title('User Page')
+
 
 # About section
 def about():
@@ -189,17 +177,11 @@ def upload():
         st.subheader('Understanding the scoring')
         st.markdown("""The scores are returned in a way that puts the emphasis on the most explicit class corresponding to the image. As an example, the class sexual_display shouldn't be understood as "is there sexual display in the image?" but rather "is there sexual display AND no sexual activity in the image?". As an illustration, an image of a woman in lingerie will score highly on the suggestive class. But if that woman is engaged in a sexual act, the AI Tool will focus on the most explicit class (sexual_activity) and return a very low score for the less explicit one (suggestive and suggestive.lingerie), because the image as a whole is explicit and should not be labelled as simply "suggestive" or "lingerie".""")
 
-def design():
-    st.title('Design')
-    st.header('Design proces for our nudity detector')
-    st.write("If you are interested in the proces of making this Nudity Detector you can visit our Prezi presentation for more information at: https://prezi.com/view/dQGMFpSzz8wxg2VJXKm6/")
-    st.image('https://i.postimg.cc/wvJVZwLQ/Knipsel.png', width=1000)
-
 # Create a dictionary to store the pages
 pages = {
     'Home': home,
+    'User': user,
     'Upload Image': upload,
-    'Design': design,
     'About': about
 }
 
