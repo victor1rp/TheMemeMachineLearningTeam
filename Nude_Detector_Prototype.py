@@ -67,12 +67,6 @@ def home():
 
     
 
-# User section
-def user():
-    # Add code for user page
-    st.title('User Page')
-
-
 # About section
 def about():
     # Add code for user page
@@ -204,7 +198,6 @@ def design():
 # Create a dictionary to store the pages
 pages = {
     'Home': home,
-    'User': user,
     'Upload Image': upload,
     'Design': design,
     'About': about
