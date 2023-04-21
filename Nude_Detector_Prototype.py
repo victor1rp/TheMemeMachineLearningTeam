@@ -45,11 +45,6 @@ def check_nudity(image_file):
 
 # Home page section
 # Home page section
-image1 = 'C:/Users/Bas/OneDrive - Stichting Hogeschool Utrecht/Bureaublad/Minor github/TheMemeMachineLearningTeam/Nudepictures/1.jpg'
-image2 = 'C:/Users/Bas/OneDrive - Stichting Hogeschool Utrecht/Bureaublad/Minor github/TheMemeMachineLearningTeam/Nudepictures/2.png'
-image3 = 'C:/Users/Bas/OneDrive - Stichting Hogeschool Utrecht/Bureaublad/Minor github/TheMemeMachineLearningTeam/Nudepictures/3.jpg'
-image4 = 'C:/Users/Bas/OneDrive - Stichting Hogeschool Utrecht/Bureaublad/Minor github/TheMemeMachineLearningTeam/Nudepictures/4.png'
-
 
 def home():
     # Add code for home page
@@ -57,10 +52,21 @@ def home():
     st.header('Prototype Nudity AI Detector')
     st.write('This app uses an AI model to detect nudity in images. Please select a page from the sidebar to get started.')
     
-    st.image(image1, use_column_width=True)
-    st.image(image2, use_column_width=True)
-    st.image(image3, use_column_width=True)
-    st.image(image4, use_column_width=True)
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.image('https://static.independent.co.uk/s3fs-public/thumbnails/image/2012/02/24/00/25Febmodelprotest.jpg', width=400)
+    
+    with col2:
+        st.image('https://hips.hearstapps.com/hmg-prod/images/controversial-celebrity-instagram-pics-kendall-jenner-1583441928.jpg?crop=1xw:1xh;center,top&resize=980:*', width=200)
+    
+    with col3:
+        st.image('https://media.istockphoto.com/id/178603721/nl/foto/happy-young-couple-enjoying-summer-on-beach.jpg?s=2048x2048&w=is&k=20&c=lffSztDT4O9b_vAmpsgCr1Ij6fR6cr5tcIhtbI2SqAE=', width=300)
+    
+    with col4:
+        st.image('https://media.istockphoto.com/id/1371786982/nl/foto/four-of-us-at-the-beach.jpg?s=2048x2048&w=is&k=20&c=otgJKBP7QHpsQ14Ctmdt0AqtnAfaE_A64zgzKJEpzxU=', width=300)
+
+    
+
 # User section
 def user():
     # Add code for user page
@@ -189,11 +195,18 @@ def upload():
         st.subheader('Understanding the scoring')
         st.markdown("""The scores are returned in a way that puts the emphasis on the most explicit class corresponding to the image. As an example, the class sexual_display shouldn't be understood as "is there sexual display in the image?" but rather "is there sexual display AND no sexual activity in the image?". As an illustration, an image of a woman in lingerie will score highly on the suggestive class. But if that woman is engaged in a sexual act, the AI Tool will focus on the most explicit class (sexual_activity) and return a very low score for the less explicit one (suggestive and suggestive.lingerie), because the image as a whole is explicit and should not be labelled as simply "suggestive" or "lingerie".""")
 
+def design():
+    st.title('Design')
+    st.header('Design proces for our nudity detector')
+    st.write("If you are interessted in the proces of making this Nudity Detector you can visit our Prezi presentation at: https://prezi.com/view/dQGMFpSzz8wxg2VJXKm6/")
+    st.image('https://i.postimg.cc/wvJVZwLQ/Knipsel.png', width=1000)
+
 # Create a dictionary to store the pages
 pages = {
     'Home': home,
     'User': user,
     'Upload Image': upload,
+    'Design': design,
     'About': about
 }
 
